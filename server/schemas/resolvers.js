@@ -1,23 +1,25 @@
+import { User } from "../models/index.js";
+
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
 export const resolvers = {
   Query: {
-    users: () => {
-      return User.find({});
+    users: async () => {
+      return User.find();
     },
-    user: (parent, { _id }) => {
+    user: async (parent, { _id }) => {
       return User.findOne({ _id });
     },
-    messages: (parent, args) => {
+    messages: async (parent, args) => {
       return Message.find({});
     },
-    message: (parent, { _id }) => {
+    message: async (parent, { _id }) => {
       return Message.findOne({ _id });
     },
-    chatRooms: (parent, args) => {
+    chatRooms: async (parent, args) => {
       return ChatRoom.find({});
     },
-    chatRoom: (parent, { _id }) => {
+    chatRoom: async (parent, { _id }) => {
       return ChatRoom.findOne({ _id });
     },
   },
