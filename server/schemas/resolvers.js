@@ -1,4 +1,5 @@
-import { User } from "../models/index.js";
+import { User, ChatRoom, Message } from "../models/index.js";
+import { signToken } from "../utils/auth.js";
 
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
@@ -11,7 +12,7 @@ export const resolvers = {
       return User.findOne({ _id });
     },
     messages: async (parent, args) => {
-      return Message.find({});
+      return Message.find({ chatRoom: args.chatRoom });
     },
     message: async (parent, { _id }) => {
       return Message.findOne({ _id });

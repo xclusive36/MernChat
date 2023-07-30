@@ -15,20 +15,20 @@ export const typeDefs = `#graphql
     online: Boolean
   }
 
+  # This "ChatRoom" type defines the queryable fields for every chat room in our data source.
+  type ChatRoom {
+    _id: ID
+    name: String
+    users: [User]
+  }
+
   # This "Message" type defines the queryable fields for every message in our data source.
   type Message {
     _id: ID
     messageText: String
     createdAt: String
     username: String
-  }
-
-  # This "ChatRoom" type defines the queryable fields for every chat room in our data source.
-  type ChatRoom {
-    _id: ID
-    name: String
-    users: [User]
-    messages: [Message]
+    chatRoom: [ChatRoom]
   }
 
   type Auth {
@@ -47,7 +47,7 @@ export const typeDefs = `#graphql
   type Query {
     users: [User]
     user(_id: ID!): User
-    messages: [Message]
+    messages(chatRoom: ID!): [Message]
     message(_id: ID!): Message
     chatRooms: [ChatRoom]
     chatRoom(_id: ID!): ChatRoom
@@ -71,7 +71,7 @@ export const typeDefs = `#graphql
     addChatRoom(name: String!): ChatRoom
     removeChatRoom(_id: ID!): ChatRoom
     removeMessage(_id: ID!): Message
-    updateChatRoom(name: String!, users: [ID], messages: [ID]): ChatRoom
+    updateChatRoom(name: String!, users: [ID]): ChatRoom
     userOnline(_id: ID!): User
     userOffline(_id: ID!): User
   }
