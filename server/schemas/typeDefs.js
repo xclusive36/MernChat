@@ -12,6 +12,7 @@ export const typeDefs = `#graphql
     username: String
     email: String
     password: String
+    online: Boolean
   }
 
   # This "Message" type defines the queryable fields for every message in our data source.
@@ -45,11 +46,11 @@ export const typeDefs = `#graphql
   # The "chatRoom" query returns a single ChatRoom (defined above).
   type Query {
     users: [User]
-    user(username: String!): User
+    user(_id: ID!): User
     messages: [Message]
     message(_id: ID!): Message
     chatRooms: [ChatRoom]
-    chatRoom(name: String!): ChatRoom
+    chatRoom(_id: ID!): ChatRoom
   }
 
   # The "Mutation" type is special: it lists all of the available mutations that
@@ -58,20 +59,21 @@ export const typeDefs = `#graphql
   # The "login" mutation returns an Auth (defined above).
   # The "addMessage" mutation returns a Message (defined above).
   # The "addChatRoom" mutation returns a ChatRoom (defined above).
+  # The "removeChatRoom" mutation returns a ChatRoom (defined above).
+  # The "removeMessage" mutation returns a Message (defined above).
+  # The "updateChatRoom" mutation returns a ChatRoom (defined above).
+  # The "userOnline" mutation returns a User (defined above).
+  # The "userOffline" mutation returns a User (defined above).
   type Mutation {
     addUser(firstName: String!, lastName: String!, username: String!, email: String!, password: String!): Auth
-    updateUser(firstName: String, lastName: String, username: String, email: String, password: String): User
     login(email: String!, password: String!): Auth
-    addMessage(messageText: String!): Message
+    addMessage(messageText: String!, chatRoom: ID!): Message
     addChatRoom(name: String!): ChatRoom
-    removeChatRoom(name: String!): ChatRoom
+    removeChatRoom(_id: ID!): ChatRoom
     removeMessage(_id: ID!): Message
     updateChatRoom(name: String!, users: [ID], messages: [ID]): ChatRoom
     userOnline(_id: ID!): User
     userOffline(_id: ID!): User
-    userJoinedChatRoom(_id: ID!, chatRoom: ID!): User
-    userTypingInChatRoom(_id: ID!, chatRoom: ID!): User
-    messageAddedToChatRoom(_id: ID!, chatRoom: ID!): Message
   }
 
   # The "Subscription" type is special: it lists all of the available subscriptions that
