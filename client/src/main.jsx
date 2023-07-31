@@ -9,7 +9,7 @@ import {
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 
-import App from "./App.jsx";
+import Home from "./pages/Home";
 import "./index.css";
 
 // Construct our main GraphQL API endpoint
@@ -39,7 +39,15 @@ const client = new ApolloClient({
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <Home />,
+  },
+  {
+    path: "/login",
+    element: <Home />,
+  },
+  {
+    path: "/signup",
+    element: <Home />,
   },
 ]);
 
