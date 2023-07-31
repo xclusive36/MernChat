@@ -5,7 +5,7 @@ const Home = () => {
   return (
     <>
       <Header />
-      <main>home page</main>
+      <main className="container is-fluid">home page</main>
       <Footer />
     </>
   );
