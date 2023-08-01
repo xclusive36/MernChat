@@ -11,6 +11,8 @@ import { setContext } from "@apollo/client/link/context";
 
 import Home from "./pages/Home";
 import "./index.css";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -43,11 +45,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/login",
-    element: <Home />,
+    element: <Login />,
   },
   {
     path: "/signup",
-    element: <Home />,
+    element: <Signup />,
   },
 ]);
 

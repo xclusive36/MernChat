@@ -1,7 +1,15 @@
 import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import Auth from "../utils/auth.js";
 
 const Header = () => {
   const [isActive, setisActive] = useState(false);
+  const location = useLocation();
+
+  const logout = (event) => {
+    event.preventDefault();
+    Auth.logout();
+  };
 
   const toggleMenu = () => {
     setisActive(!isActive);
@@ -12,10 +20,9 @@ const Header = () => {
     <header className="header">
       <nav className="navbar" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
-          <a className="navbar-item" href={`/`}>
+          <Link to={`/`} className="navbar-item">
             <h1 className="title">MernChat</h1>
-          </a>
-
+          </Link>
           <a
             role="button"
             className={isActive ? "navbar-burger is-active" : "navbar-burger"}
@@ -29,7 +36,6 @@ const Header = () => {
             <span aria-hidden="true"></span>
           </a>
         </div>
-
         <div
           id="navbarBasicExample"
           className={isActive ? "navbar-menu is-active" : "navbar-menu"}
@@ -37,10 +43,40 @@ const Header = () => {
           <div className="navbar-end">
             <div className="navbar-item">
               <div className="buttons">
-                <a className="button is-primary">
-                  <strong>Sign up</strong>
-                </a>
-                <a className="button is-light">Log in</a>
+                {Auth.loggedIn() ? ( // if logged in show my account & logout buttons
+                  <>
+                    <Link to={`/`} className="button is-primary">
+                      My Account
+                    </Link>
+                    <Link to={`/`} className="button is-link" onClick={logout}>
+                      Log out
+                    </Link>
+                  </>
+                ) : (
+                  // if logged out show signup and login buttons
+                  <>
+                    <Link
+                      to={`/signup`}
+                      className={
+                        location.pathname === "/signup"
+                          ? "button is-primary"
+                          : "button is-light"
+                      }
+                    >
+                      Sign up
+                    </Link>
+                    <Link
+                      to={`/login`}
+                      className={
+                        location.pathname === "/login"
+                          ? "button is-primary"
+                          : "button is-light"
+                      }
+                    >
+                      Log in
+                    </Link>
+                  </>
+                )}
               </div>
             </div>
           </div>

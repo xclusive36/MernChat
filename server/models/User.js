@@ -23,7 +23,11 @@ const userSchema = new Schema({
   password: {
     type: String,
     required: true,
-    minlength: 5,
+    minlength: 8,
+    match: [
+      /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/,
+      "Must contain at least one number, one lowercase and one uppercase letter, and at least one special character!",
+    ],
   },
   online: {
     type: Boolean,
