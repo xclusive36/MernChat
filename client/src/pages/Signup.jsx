@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_USER } from "../utils/mutations";
 import { Link } from "react-router-dom";
@@ -8,16 +9,31 @@ import Auth from "../utils/auth.js";
 
 const Signup = () => {
   const [addUser, { error, data }] = useMutation(ADD_USER);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [username, setUserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
+
+  // the passwordpattern requires at least one number, one lowercase letter, one uppercase letter, and one special character
+  const passwordPattern = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/; // regex pattern for password validation
+
+  // the namepattern only allows letters, no spaces, no numbers, no special characters
+  const namePattern = /^[a-zA-Z]+$/; // regex pattern for name validation
+
+  // the emailpattern requires a valid email address
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regex pattern for email validation
 
   const handleFormSubmit = async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    const firstName = form[0].value;
-    const lastName = form[1].value;
-    const username = form[2].value;
-    const email = form[3].value;
-    const password = form[4].value;
-    const passwordConfirm = form[5].value;
+    const firstName = form[0].value.trim();
+    const lastName = form[1].value.trim();
+    const username = form[2].value.trim();
+    const email = form[3].value.trim();
+    const password = form[4].value.trim();
+    const passwordConfirm = form[5].value.trim();
     const checkBox = form[6].checked;
 
     // do the passwords match?
@@ -35,8 +51,6 @@ const Signup = () => {
     }
 
     // does the password contain at least one number, one lowercase letter, and one uppercase letter, and one special character?
-    const passwordPattern =
-      /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/; // regex pattern for password validation
     if (!passwordPattern.test(password)) {
       // if not, display an alert
       alert(
@@ -46,7 +60,6 @@ const Signup = () => {
     }
 
     // does the first name, lastname, and username contain only letters?
-    const namePattern = /^[a-zA-Z]+$/; // regex pattern for name validation
     if (
       !namePattern.test(firstName) ||
       !namePattern.test(lastName) ||
@@ -65,7 +78,6 @@ const Signup = () => {
     }
 
     // does email match a valid email pattern?
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // regex pattern for email validation
     if (!emailPattern.test(email)) {
       // if not, display an alert
       alert("Invalid email address!");
@@ -84,6 +96,12 @@ const Signup = () => {
 
       // once complete, clear all form fields
       form.reset();
+      setFirstName("");
+      setLastName("");
+      setUserName("");
+      setEmail("");
+      setPassword("");
+      setPasswordConfirm("");
     } catch (err) {
       console.error(err);
     }
@@ -94,6 +112,9 @@ const Signup = () => {
       <Header />
       <main className="container is-fluid pt-4">
         <div className="card">
+          <div className="card-header has-background-primary-dark">
+            <h2 className="has-text-white m-4">Signup</h2>
+          </div>
           <div className="card-content">
             {data ? (
               <p>
@@ -102,7 +123,6 @@ const Signup = () => {
               </p>
             ) : (
               <>
-                <h2>Signup</h2>
                 <p className="mt-1 mb-4">
                   Create a new account by filling out the form below.
                 </p>
@@ -117,9 +137,13 @@ const Signup = () => {
                             type="text"
                             placeholder="First Name"
                             name="firstName"
+                            onBlur={(event) => setFirstName(event.target.value)}
                             required
                           />
                         </div>
+                        {firstName && !namePattern.test(firstName) && (
+                          <p className="help is-danger">This name is invalid</p>
+                        )}
                       </div>
                     </div>
                     <div className="column">
@@ -131,9 +155,13 @@ const Signup = () => {
                             type="text"
                             placeholder="Last Name"
                             name="lastName"
+                            onBlur={(event) => setLastName(event.target.value)}
                             required
                           />
                         </div>
+                        {lastName && !namePattern.test(lastName) && (
+                          <p className="help is-danger">This name is invalid</p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -147,9 +175,15 @@ const Signup = () => {
                             type="text"
                             placeholder="Username"
                             name="username"
+                            onBlur={(event) => setUserName(event.target.value)}
                             required
                           />
                         </div>
+                        {username && !namePattern.test(username) && (
+                          <p className="help is-danger">
+                            This username is invalid
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="column">
@@ -161,9 +195,15 @@ const Signup = () => {
                             type="email"
                             placeholder="Email"
                             name="email"
+                            onBlur={(event) => setEmail(event.target.value)}
                             required
                           />
                         </div>
+                        {email && !emailPattern.test(email) && (
+                          <p className="help is-danger">
+                            This email is invalid
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -176,9 +216,22 @@ const Signup = () => {
                             className="input is-small"
                             type="password"
                             name="password"
+                            onBlur={(event) => setPassword(event.target.value)}
                             required
                           />
                         </div>
+                        {password && !passwordPattern.test(password) && (
+                          <>
+                            <p className="help is-danger">
+                              This password is invalid
+                            </p>
+                            <p className="help">
+                              Password must contain at least one number, one
+                              lowercase letter, one uppercase letter, and one
+                              special character!
+                            </p>
+                          </>
+                        )}
                       </div>
                     </div>
                     <div className="column">
@@ -189,9 +242,17 @@ const Signup = () => {
                             className="input is-small"
                             type="password"
                             name="passwordConfirm"
+                            onBlur={(event) =>
+                              setPasswordConfirm(event.target.value)
+                            }
                             required
                           />
                         </div>
+                        {passwordConfirm && password !== passwordConfirm && (
+                          <p className="help is-danger">
+                            This password does not match
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>
