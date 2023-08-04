@@ -66,6 +66,7 @@ export const typeDefs = `#graphql
   # The "userOffline" mutation returns a User (defined above).
   type Mutation {
     addUser(firstName: String!, lastName: String!, username: String!, email: String!, password: String!): Auth
+    removeUser(_id: ID!): User
     login(email: String!, password: String!): Auth
     addMessage(messageText: String!, chatRoom: ID!): Message
     addChatRoom(name: String!): ChatRoom

@@ -13,7 +13,6 @@ const Header = () => {
 
   const toggleMenu = () => {
     setisActive(!isActive);
-    console.log(!isActive);
   };
 
   return (

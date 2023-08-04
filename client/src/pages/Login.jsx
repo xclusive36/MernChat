@@ -22,7 +22,8 @@ const Login = () => {
 
       Auth.login(data.login.token);
     } catch (err) {
-      console.error(err);
+      // console.error(err);
+      console.log("Error: ", error);
     }
   };
 

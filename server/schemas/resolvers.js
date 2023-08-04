@@ -25,10 +25,29 @@ export const resolvers = {
     },
   },
   Mutation: {
-    addUser: async (parent, { username, email, password }) => {
-      const user = await User.create({ username, email, password });
+    addUser: async (
+      parent,
+      { firstName, lastName, username, email, password }
+    ) => {
+      const user = await User.create({
+        firstName,
+        lastName,
+        username,
+        email,
+        password,
+        online: true,
+      });
       const token = signToken(user);
       return { token, user };
+    },
+    removeUser: async (parent, { _id }) => {
+      const user = await User.findOneAndDelete({ _id });
+
+      if (!user) {
+        throw new AuthenticationError("No user found with this id!");
+      }
+
+      return user;
     },
     login: async (parent, { email, password }) => {
       const user = await User.findOne({ email });

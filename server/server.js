@@ -11,6 +11,9 @@ import { typeDefs, resolvers } from "./schemas/index.js"; // import typeDefs and
 
 import db from "./config/connection.js"; // import db from config/connection
 
+// Define a port to run the server on, default to 4000
+const PORT = process.env.PORT || 4000;
+
 // Required logic for integrating with Express
 const app = express();
 // Our httpServer handles incoming requests to our Express app.
@@ -59,6 +62,6 @@ db.once("open", () => {
 });
 
 // Modified server startup
-await new Promise((resolve) => httpServer.listen({ port: 4000 }, resolve));
+await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
 
 console.log(`🚀 Server ready at http://localhost:4000/graphql`);
