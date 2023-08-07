@@ -19,7 +19,18 @@ const app = express();
 // Our httpServer handles incoming requests to our Express app.
 // Below, we tell Apollo Server to "drain" this httpServer,
 // enabling our servers to shut down gracefully.
+
 const httpServer = http.createServer(app);
+
+// Same ApolloServer initialization as before, plus the drain plugin
+// for our httpServer.
+const server = new ApolloServer({
+  // create a new Apollo Server instance and pass in our schema data, context, and plugins
+  typeDefs, // add typeDefs
+  resolvers, // add resolvers
+  context: authMiddleware, // apply authMiddleware function to the server as the context
+  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })], // add the drain plugin
+});
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "../client/build")));
@@ -29,16 +40,6 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "../client/build/index.html"));
 });
 
-// Same ApolloServer initialization as before, plus the drain plugin
-// for our httpServer.
-const server = new ApolloServer({
-  // create a new Apollo Server instance and pass in our schema data, context, and plugins
-  typeDefs, // add typeDefs
-  resolvers, // add resolvers
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })], // add the drain plugin
-  context: authMiddleware, // apply authMiddleware function to the server as the context
-});
-
 // Ensure we wait for our server to start
 await server.start();
 
@@ -46,12 +47,18 @@ await server.start();
 // and our expressMiddleware function.
 app.use(
   "/graphql",
-  cors(),
+  cors({
+    origin: "*",
+    credentials: true,
+  }),
   bodyParser.json(),
   // expressMiddleware accepts the same arguments:
   // an Apollo Server instance and optional configuration options
   expressMiddleware(server, {
-    context: async ({ req }) => ({ token: req.headers.token }),
+    context: async ({ req }) => ({
+      token: req.headers.token || "",
+      user: req.headers.user || "",
+    }),
   })
 );
 
