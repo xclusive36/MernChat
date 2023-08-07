@@ -10,6 +10,7 @@ import { setContext } from "@apollo/client/link/context";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Chat from "./pages/Chat";
 import Auth from "./utils/auth";
 
 // Construct our main GraphQL API endpoint
@@ -53,6 +54,14 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <Signup />,
   },
+  {
+    path: "/chat/:chatRoomId",
+    element: <Chat />,
+  },
+  // {
+  //   path: "*",
+  //   element: <Home />,
+  // },
 ]);
 
 function App() {

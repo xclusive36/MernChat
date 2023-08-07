@@ -4,6 +4,7 @@ import Auth from "../utils/auth";
 
 const AddChatroom = () => {
   const [addChatroom, { error }] = useMutation(ADD_CHATROOM);
+  const token = Auth.loggedIn() ? Auth.getToken() : null; // define token variable as Auth.loggedIn() ? Auth.getToken() : null
 
   const handleAddChatroom = async (event) => {
     event.preventDefault();
@@ -15,8 +16,6 @@ const AddChatroom = () => {
         Authorization: `Bearer ${Auth.getToken()}`, // set Authorization to Bearer token
       },
     };
-
-    const token = Auth.loggedIn() ? Auth.getToken() : null; // define token variable as Auth.loggedIn() ? Auth.getToken() : null
 
     if (!token) {
       // if token is null
@@ -34,12 +33,11 @@ const AddChatroom = () => {
 
         if (data) {
           event.target.elements[0].value = "";
+          console.log("Chatroom added successfully!");
+          window.location.assign(`/chat/${data.addChatRoom._id}`);
+
+          return true;
         }
-
-        // window.location.assign("/chatroom/" + data.addChatroom._id);
-        console.log("Chatroom added successfully!");
-
-        return true;
       } catch (err) {
         console.error(err);
         console.error(error);
@@ -48,16 +46,22 @@ const AddChatroom = () => {
   };
 
   return (
-    <form onSubmit={handleAddChatroom} className="add-chatroom-form">
+    <form
+      onSubmit={handleAddChatroom}
+      className={token ? "add-chatroom-form" : "add-chatroom-form hidden"}
+    >
       <div className="field">
-        <label className="label">Add Chatroom</label>
+        <label className="label">New Chatroom</label>
         <div className="control">
           <input
             className="input"
             type="text"
             placeholder="Enter a chatroom name"
+            disabled={!token}
           />
-          <button className="button is-primary">Add Chatroom</button>
+          <button className="mt-4 button is-primary" disabled={!token}>
+            Create a new Chatroom
+          </button>
         </div>
       </div>
     </form>
