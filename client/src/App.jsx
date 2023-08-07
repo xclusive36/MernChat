@@ -27,7 +27,7 @@ const authLink = setContext((_, { headers }) => {
       ...headers,
       authorization: token ? `Bearer ${token}` : "",
       token: token,
-      user: Auth.getProfile(),
+      user: token ? Auth.getProfile() : "",
     },
   };
 });
@@ -56,7 +56,6 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-
   return (
     <ApolloProvider client={client}>
       <RouterProvider router={router} />
