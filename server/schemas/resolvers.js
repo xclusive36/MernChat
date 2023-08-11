@@ -17,6 +17,21 @@ export const resolvers = {
     message: async (parent, { _id }) => {
       return Message.findOne({ _id });
     },
+    // chatRoomsSort: async (parent, { offset, limit, searchTerm }) => {
+    chatRoomsSort: async (parent, { offset, limit, searchTerm}) => {
+      const query = {};
+      if (searchTerm) {
+        query.name = {
+          $regex: searchTerm,
+          $options: "i",
+        };
+      }
+      const chatRooms = await ChatRoom.find(query)
+        .skip(offset)
+        .limit(limit)
+        .sort({ name: 1 });
+      return chatRooms;
+    },
     chatRooms: async (parent, args) => {
       return ChatRoom.find({});
     },

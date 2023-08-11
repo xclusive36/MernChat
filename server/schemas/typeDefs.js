@@ -50,6 +50,7 @@ export const typeDefs = `#graphql
     messages(chatRoom: ID!): [Message]
     message(_id: ID!): Message
     chatRooms: [ChatRoom]
+    chatRoomsSort(offset: Int, limit: Int, searchTerm: String): [ChatRoom]
     chatRoom(_id: ID!): ChatRoom
   }
 

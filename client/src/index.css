@@ -31,6 +31,10 @@ h2 {
   margin: 0 auto;
 }
 
+.hidden {
+  display: none;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
