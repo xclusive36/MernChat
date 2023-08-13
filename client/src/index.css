@@ -35,6 +35,23 @@ h2 {
   display: none;
 }
 
+.page-footer {
+  border-top: 1px solid #ededed;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 1rem;
+}
+
+.container {
+  margin-bottom: 100px;
+}
+
+.modal-background {
+  background-color: rgb(0 0 0 / 50%);
+  /* --bs-backdrop-bg: #000; */
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

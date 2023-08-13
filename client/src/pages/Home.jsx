@@ -8,7 +8,8 @@ import Header from "../components/Header";
 
 const Home = () => {
   const [limit, setLimit] = useState(10); // define limit state variable as limit, setLimit
-  const [searchTerm, setSearchTerm] = useState(""); // define searchTerm state variable as [searchTerm, setSearchTerm
+  const [searchTerm, setSearchTerm] = useState(""); // define searchTerm state variable as [searchTerm, setSearchTerm]
+  const [isModalActive, setIsModalActive] = useState(false); // define isModalActive state variable as [isModalActive, setIsModalActive]
   const { loading, data, fetchMore } = useQuery(QUERY_CHATROOMS_SORT, {
     variables: { offset: 0, limit: limit, searchTerm },
   }); // use QUERY_CHATROOMS_SORT instead of QUERY_CHATROOMS
@@ -32,14 +33,6 @@ const Home = () => {
     <>
       <Header />
       <main className="container is-fluid">
-        <div className="page-title">Welcome to MernChat!</div>
-        <div className="page-subtitle">
-          A place to chat with your friends and family
-        </div>
-        <div className="add-chatroom">
-          <AddChatroom />
-        </div>
-
         <article className="mt-4 panel is-info">
           <p className="panel-heading">Chatrooms</p>
           <p className="panel-tabs">
@@ -89,7 +82,11 @@ const Home = () => {
           )}
         </article>
       </main>
-      <Footer />
+      <Footer setIsModalActive={setIsModalActive} />
+      <AddChatroom
+        isModalActive={isModalActive}
+        setIsModalActive={setIsModalActive}
+      />
     </>
   );
 };
