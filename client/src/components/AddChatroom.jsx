@@ -50,20 +50,24 @@ const AddChatroom = () => {
       onSubmit={handleAddChatroom}
       className={token ? "add-chatroom-form" : "add-chatroom-form hidden"}
     >
-      <div className="field">
-        <label className="label">New Chatroom</label>
-        <div className="control">
-          <input
-            className="input"
-            type="text"
-            placeholder="Enter a chatroom name"
-            disabled={!token}
-          />
-          <button className="mt-4 button is-primary" disabled={!token}>
-            Create a new Chatroom
-          </button>
+      <article className="mt-4 panel is-info">
+        <p className="panel-heading">New Chatroom</p>
+        <div className="panel-block">
+          <div className="field">
+            <div className="control">
+              <input
+                className="input"
+                type="text"
+                placeholder="Enter a chatroom name"
+                disabled={!token}
+              />
+              <button className="add-chat mt-4 button is-primary" disabled={!token}>
+                Create a new Chatroom
+              </button>
+            </div>
+          </div>
         </div>
-      </div>
+      </article>
     </form>
   );
 };
