@@ -19,6 +19,11 @@ const Header = () => {
     <header className="header">
       <nav className="navbar" role="navigation" aria-label="main navigation">
         <div className="navbar-brand">
+          {location.pathname !== "/" && (
+            <Link to={`/`} className="navbar-item">
+              <i className="fas fa-arrow-left"></i>
+            </Link>
+          )}
           <Link to={`/`} className="navbar-item">
             <h1 className="title">MernChat</h1>
           </Link>

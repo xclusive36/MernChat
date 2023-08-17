@@ -51,6 +51,7 @@ export const typeDefs = `#graphql
     message(_id: ID!): Message
     chatRooms: [ChatRoom]
     chatRoomsSort(offset: Int, limit: Int, searchTerm: String): [ChatRoom]
+    chatRoomsSortCount(searchTerm: String): Int
     chatRoom(_id: ID!): ChatRoom
   }
 

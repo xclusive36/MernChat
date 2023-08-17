@@ -18,7 +18,7 @@ export const resolvers = {
       return Message.findOne({ _id });
     },
     // chatRoomsSort: async (parent, { offset, limit, searchTerm }) => {
-    chatRoomsSort: async (parent, { offset, limit, searchTerm}) => {
+    chatRoomsSort: async (parent, { offset, limit, searchTerm }) => {
       const query = {};
       if (searchTerm) {
         query.name = {
@@ -31,6 +31,17 @@ export const resolvers = {
         .limit(limit)
         .sort({ name: 1 });
       return chatRooms;
+    },
+    chatRoomsSortCount: async (parent, { searchTerm }) => {
+      const query = {};
+      if (searchTerm) {
+        query.name = {
+          $regex: searchTerm,
+          $options: "i",
+        };
+      }
+      const count = await ChatRoom.find(query).countDocuments();
+      return count;
     },
     chatRooms: async (parent, args) => {
       return ChatRoom.find({});

@@ -28,6 +28,12 @@ export const QUERY_CHATROOMS_SORT = gql`
   }
 `;
 
+export const QUERY_CHATROOMS_SORT_COUNT = gql`
+  query chatroomsSortCount($searchTerm: String) {
+    chatRoomsSortCount(searchTerm: $searchTerm)
+  }
+`;
+
 export const QUERY_CHATROOMS = gql`
   query chatrooms {
     chatRooms {
