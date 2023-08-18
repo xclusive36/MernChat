@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { QUERY_CHATROOM } from "../utils/queries";
+import Auth from "../utils/auth";
 
 import Header from "../components/Header";
 // import Footer from "../components/Footer";
@@ -36,13 +37,13 @@ const Chat = () => {
           </div>
         </section>
         <section className="p-4">
-        <strong>Michele</strong> <span className="is-size-7">2:30PM</span>
+          <strong>Michele</strong> <span className="is-size-7">2:30PM</span>
           <div className="notification is-success is-light">
             Primar lorem ipsum dolor sit amet.
           </div>
         </section>
         <section className="p-4">
-        <strong>Tobey</strong> <span className="is-size-7">2:30PM</span>
+          <strong>Tobey</strong> <span className="is-size-7">2:30PM</span>
           <div className="notification is-light">
             Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus
             diam, et dictum <a>felis venenatis</a> efficitur.
@@ -59,10 +60,16 @@ const Chat = () => {
                     className="input"
                     type="text"
                     placeholder="Message"
+                    disabled={!Auth.loggedIn()}
                   />
                 </p>
                 <p className="control">
-                  <button className="mx-2 button is-primary">Send</button>
+                  <button
+                    disabled={!Auth.loggedIn()}
+                    className="mx-2 button is-primary"
+                  >
+                    Send
+                  </button>
                 </p>
               </div>
             </div>

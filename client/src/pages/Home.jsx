@@ -53,10 +53,6 @@ const Home = () => {
       <main className="container is-fluid">
         <article className="mt-4 panel is-info">
           <p className="panel-heading">Chatrooms</p>
-          <p className="panel-tabs">
-            <a className="is-active">All</a>
-            <a>Friends</a>
-          </p>
           <div className="panel-block">
             <p className="control has-icons-left">
               <input
