@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
-import { QUERY_CHATROOMS_SORT } from "../utils/queries";
+import {
+  QUERY_CHATROOMS_SORT,
+  QUERY_CHATROOMS_SORT_COUNT,
+} from "../utils/queries";
 
 import AddChatroom from "../components/AddChatroom";
 import Footer from "../components/Footer";
@@ -15,6 +18,9 @@ const Home = () => {
     nextFetchPolicy: "cache-first",
     // fetchPolicy: "no-cache",
   }); // use QUERY_CHATROOMS_SORT instead of QUERY_CHATROOMS
+  const { data: chatRoomsCountData } = useQuery(QUERY_CHATROOMS_SORT_COUNT, {
+    variables: { searchTerm: searchTerm },
+  });
 
   useEffect(() => {
     if (data) setChatRooms(data.chatRoomsSort);
@@ -36,7 +42,7 @@ const Home = () => {
         offset: data.chatRoomsSort.length,
       },
     });
-    console.log(fetchMoreData.data)
+
     const mergeArray = [...chatRooms, ...fetchMoreData.data.chatRoomsSort];
     setChatRooms(mergeArray);
   };
@@ -86,9 +92,16 @@ const Home = () => {
                 role="navigation"
                 aria-label="pagination"
               >
-                <a onClick={handleNextPage} className="pagination-next">
+                <button
+                  onClick={handleNextPage}
+                  disabled={
+                    chatRoomsCountData?.chatRoomsSortCount ===
+                    chatRooms?.length
+                  }
+                  className={chatRoomsCountData?.chatRoomsSortCount === chatRooms?.length ? "is-hidden" : "button is-primary"}
+                >
                   Load more...
-                </a>
+                </button>
               </nav>
             </>
           )}
