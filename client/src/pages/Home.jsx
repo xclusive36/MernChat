@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "@apollo/client";
 import { QUERY_CHATROOMS_SORT } from "../utils/queries";
 
@@ -7,12 +7,18 @@ import Footer from "../components/Footer";
 import Header from "../components/Header";
 
 const Home = () => {
-  const [limit, setLimit] = useState(10); // define limit state variable as limit, setLimit
   const [searchTerm, setSearchTerm] = useState(""); // define searchTerm state variable as [searchTerm, setSearchTerm]
   const [isModalActive, setIsModalActive] = useState(false); // define isModalActive state variable as [isModalActive, setIsModalActive]
-  const { loading, data, fetchMore } = useQuery(QUERY_CHATROOMS_SORT, {
-    variables: { offset: 0, limit: limit, searchTerm },
+  const [chatRooms, setChatRooms] = useState([]);
+  const { data, loading, fetchMore } = useQuery(QUERY_CHATROOMS_SORT, {
+    variables: { offset: 0, limit: 10, searchTerm: searchTerm },
+    nextFetchPolicy: "cache-first",
+    // fetchPolicy: "no-cache",
   }); // use QUERY_CHATROOMS_SORT instead of QUERY_CHATROOMS
+
+  useEffect(() => {
+    if (data) setChatRooms(data.chatRoomsSort);
+  }, [data]);
 
   // define handleSearchTermChange function
   const handleSearchTermChange = (event) => {
@@ -24,9 +30,15 @@ const Home = () => {
   // define handleNextPage function
   const handleNextPage = async (e) => {
     e.preventDefault();
-    await fetchMore({
-      variables: { offset: data.chatRoomsSort.length }, // set variables to { offset: limit * page, limit: limit }
+
+    const fetchMoreData = await fetchMore({
+      variables: {
+        offset: data.chatRoomsSort.length,
+      },
     });
+    console.log(fetchMoreData.data)
+    const mergeArray = [...chatRooms, ...fetchMoreData.data.chatRoomsSort];
+    setChatRooms(mergeArray);
   };
 
   return (
@@ -56,7 +68,7 @@ const Home = () => {
             <div>Loading...</div>
           ) : (
             <>
-              {data.chatRoomsSort.map((chatRoom) => (
+              {chatRooms.map((chatRoom) => (
                 <a
                   href={`/chat/${chatRoom._id}`}
                   className="panel-block"
@@ -75,7 +87,7 @@ const Home = () => {
                 aria-label="pagination"
               >
                 <a onClick={handleNextPage} className="pagination-next">
-                  Fetch more...
+                  Load more...
                 </a>
               </nav>
             </>

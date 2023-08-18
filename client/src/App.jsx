@@ -44,7 +44,7 @@ const client = new ApolloClient({
           chatRoomsSort: {
             // Don't cache separate results based on
             // any of this field's arguments.
-            keyArgs: false,
+            // keyArgs: false,
 
             // Concatenate the incoming list items with
             // the existing list items.
