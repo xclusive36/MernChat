@@ -42,10 +42,39 @@ export const ADD_CHATROOM = gql`
     addChatRoom(name: $name) {
       _id
       name
-      users {
-        _id
-        username
-      }
+    }
+  }
+`;
+
+export const REMOVE_CHATROOM = gql`
+  mutation removeChatRoom($id: ID!) {
+    removeChatRoom(_id: $id) {
+      _id
+      name
+    }
+  }
+`;
+
+export const ADD_MESSAGE = gql`
+  mutation addMessage($messageText: String!, $chatRoomId: ID!) {
+    addMessage(messageText: $messageText, chatRoomId: $chatRoomId) {
+      _id
+      messageText
+      createdAt
+      chatRoomId
+      username
+    }
+  }
+`;
+
+export const REMOVE_MESSAGE = gql`
+  mutation removeMessage($id: ID!) {
+    removeMessage(_id: $id) {
+      _id
+      messageText
+      createdAt
+      chatRoomId
+      username
     }
   }
 `;

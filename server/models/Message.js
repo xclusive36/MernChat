@@ -1,5 +1,7 @@
 import { Schema, model } from "mongoose";
 
+import { dateFormat } from "../utils/dateFormat.js";
+
 const messageSchema = new Schema({
   messageText: {
     type: String,
@@ -10,14 +12,14 @@ const messageSchema = new Schema({
     default: Date.now,
     get: (timestamp) => dateFormat(timestamp),
   },
-  username: {
-    type: String,
-    required: true,
-  },
-  chatRoom: {
+  chatRoomId: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: "ChatRoom",
+  },
+  username: {
+    type: String,
+    required: true,
   },
 });
 

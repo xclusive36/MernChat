@@ -7,7 +7,9 @@ dayjs.extend(relativeTime)
 dayjs.extend(duration)
 
 const KNOWN_FORMATS = {
-  onlyDate: 'YYYY-MM-DD',
+  onlyDate: 'ddd, MMM D',
+  dateAndTime: 'ddd, MMM D - h:mm a',
+  onlyTime: 'h:mm a',
   standard: 'ddd MMM YYYY, HH:mm:ss',
 }
 

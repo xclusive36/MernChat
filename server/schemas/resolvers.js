@@ -11,8 +11,8 @@ export const resolvers = {
     user: async (parent, { _id }) => {
       return User.findOne({ _id });
     },
-    messages: async (parent, args) => {
-      return Message.find({ chatRoom: args.chatRoom });
+    messages: async (parent, { chatRoomId }) => {
+      return (await Message.find({ chatRoomId: chatRoomId })).reverse();
     },
     message: async (parent, { _id }) => {
       return Message.findOne({ _id });
@@ -92,12 +92,13 @@ export const resolvers = {
 
       return { token, user };
     },
-    addMessage: async (parent, { messageText, chatRoom }, context) => {
+    addMessage: async (parent, { messageText, chatRoomId }, context) => {
       if (context.user) {
+        const { username } = JSON.parse(context.user);
         return Message.create({
           messageText,
-          chatRoom,
-          username: context.user.username,
+          username: username,
+          chatRoomId,
         });
       }
 
@@ -107,7 +108,6 @@ export const resolvers = {
       if (context.user) {
         return ChatRoom.create({
           name,
-          users: [context.user.username],
         });
       }
 

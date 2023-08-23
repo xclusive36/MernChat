@@ -7,12 +7,6 @@ const chatRoomSchema = new Schema({
     unique: true,
     trim: true,
   },
-  users: [
-    {
-      type: Schema.Types.ObjectId,
-      ref: "User",
-    },
-  ],
 });
 
 export const ChatRoom = model("ChatRoom", chatRoomSchema);

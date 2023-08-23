@@ -20,10 +20,6 @@ export const QUERY_CHATROOMS_SORT = gql`
     chatRoomsSort(offset: $offset, limit: $limit, searchTerm: $searchTerm) {
       _id
       name
-      users {
-        _id
-        username
-      }
     }
   }
 `;
@@ -39,10 +35,6 @@ export const QUERY_CHATROOMS = gql`
     chatRooms {
       _id
       name
-      users {
-        _id
-        username
-      }
     }
   }
 `;
@@ -52,10 +44,18 @@ export const QUERY_CHATROOM = gql`
     chatRoom(_id: $id) {
       _id
       name
-      users {
-        _id
-        username
-      }
+    }
+  }
+`;
+
+export const QUERY_MESSAGES = gql`
+  query messages($chatRoomId: ID!) {
+    messages(chatRoomId: $chatRoomId) {
+      _id
+      messageText
+      createdAt
+      chatRoomId
+      username
     }
   }
 `;
@@ -66,12 +66,6 @@ export const QUERY_ME = gql`
       _id
       username
       email
-      thoughts {
-        _id
-        thoughtText
-        thoughtAuthor
-        createdAt
-      }
     }
   }
 `;

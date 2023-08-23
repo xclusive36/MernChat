@@ -28,7 +28,7 @@ const authLink = setContext((_, { headers }) => {
       ...headers,
       authorization: token ? `Bearer ${token}` : "",
       token: token,
-      user: token ? Auth.getProfile() : "",
+      user: token ? JSON.stringify(Auth.getProfile().data) : "",
     },
   };
 });
@@ -42,6 +42,17 @@ const client = new ApolloClient({
       Query: {
         fields: {
           chatRoomsSort: {
+            // Don't cache separate results based on
+            // any of this field's arguments.
+            // keyArgs: false,
+
+            // Concatenate the incoming list items with
+            // the existing list items.
+            merge(existing = [], incoming) {
+              return [...existing, ...incoming];
+            },
+          },
+          messageText: {
             // Don't cache separate results based on
             // any of this field's arguments.
             // keyArgs: false,

@@ -12,8 +12,7 @@ const AddChatroom = ({ isModalActive, setIsModalActive }) => {
     const headers = {
       // define headers variable for simplicity
       headers: {
-        // define headers
-        Authorization: `Bearer ${Auth.getToken()}`, // set Authorization to Bearer token
+        authorization: token ? `Bearer ${token}` : "",
       },
     };
 
@@ -23,7 +22,7 @@ const AddChatroom = ({ isModalActive, setIsModalActive }) => {
       return false; // return false
     }
 
-    const chatroomName = event.target.elements[0].value.trim();
+    const chatroomName = event.target[1].value;
     if (chatroomName) {
       try {
         const { data } = await addChatroom({
@@ -32,7 +31,7 @@ const AddChatroom = ({ isModalActive, setIsModalActive }) => {
         });
 
         if (data) {
-          event.target.elements[0].value = "";
+          event.target[1].value = "";
           console.log("Chatroom added successfully!");
           window.location.assign(`/chat/${data.addChatRoom._id}`);
 

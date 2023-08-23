@@ -19,7 +19,6 @@ export const typeDefs = `#graphql
   type ChatRoom {
     _id: ID
     name: String
-    users: [User]
   }
 
   # This "Message" type defines the queryable fields for every message in our data source.
@@ -28,7 +27,7 @@ export const typeDefs = `#graphql
     messageText: String
     createdAt: String
     username: String
-    chatRoom: [ChatRoom]
+    chatRoomId: ID
   }
 
   type Auth {
@@ -47,7 +46,7 @@ export const typeDefs = `#graphql
   type Query {
     users: [User]
     user(_id: ID!): User
-    messages(chatRoom: ID!): [Message]
+    messages(chatRoomId: ID!): [Message]
     message(_id: ID!): Message
     chatRooms: [ChatRoom]
     chatRoomsSort(offset: Int, limit: Int, searchTerm: String): [ChatRoom]
@@ -70,7 +69,7 @@ export const typeDefs = `#graphql
     addUser(firstName: String!, lastName: String!, username: String!, email: String!, password: String!): Auth
     removeUser(_id: ID!): User
     login(email: String!, password: String!): Auth
-    addMessage(messageText: String!, chatRoom: ID!): Message
+    addMessage(messageText: String!, chatRoomId: ID!): Message
     addChatRoom(name: String!): ChatRoom
     removeChatRoom(_id: ID!): ChatRoom
     removeMessage(_id: ID!): Message

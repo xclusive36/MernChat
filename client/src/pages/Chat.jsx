@@ -1,81 +1,102 @@
+import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@apollo/client";
-import { QUERY_CHATROOM } from "../utils/queries";
-import Auth from "../utils/auth";
+import {
+  useQuery,
+  // useMutation
+} from "@apollo/client";
+import { QUERY_CHATROOM, QUERY_MESSAGES } from "../utils/queries";
+// import { REMOVE_MESSAGE } from "../utils/mutations";
+import { dateFormat } from "../utils/dateFormat.js";
 
 import Header from "../components/Header";
-// import Footer from "../components/Footer";
+import AddMessage from "../components/AddMessage";
+import Auth from "../utils/auth";
 
 const Chat = () => {
   // Use `useParams()` to retrieve value of the route parameter `:chatRoomId`
   const { chatRoomId } = useParams();
-
-  // check and sanitize the chatRoomId route param value
-  const sanitizedChatRoomId = chatRoomId.replace(/[^a-zA-Z0-9]/g, "");
+  const [messages, setMessages] = useState([]); // define messages state variable as [messages, setMessages]
+  const subTitle = useRef();
 
   // Use `useQuery()` hook to retrieve chatRoom data
   const { loading, data } = useQuery(QUERY_CHATROOM, {
-    variables: { id: sanitizedChatRoomId },
+    variables: { id: chatRoomId },
   });
 
-  const chatRoom = data?.chatRoom || {};
+  const { data: messageData } = useQuery(QUERY_MESSAGES, {
+    variables: { chatRoomId },
+  });
+
+  useEffect(() => {
+    if (messageData) setMessages(messageData.messages);
+  }, [messageData]);
+
+  // const [removeMessage] = useMutation(REMOVE_MESSAGE);
+
+  // const handleRemoveMessage = async (e, messageId) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     await removeMessage({
+  //       variables: { id: messageId },
+  //       context: {
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("id_token")}`,
+  //         },
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
+  const scrollToTop = () => {
+    subTitle.current.scrollIntoView({
+      behavior: "smooth",
+      block: "center",
+    });
+  };
+
   return (
     <>
       <Header />
       <main className="container mx-4">
-        <h2 className="subtitle">{chatRoom?.name}</h2>
-        <section className="p-4">
-          <strong>Joshua</strong> <span className="is-size-7">2:30PM</span>
-          <div className="notification is-info">
-            Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus
-            diam, et dictum <a>felis venenatis</a> efficitur.
-          </div>
-        </section>
-        <section className="p-4">
-          <strong>Michele</strong> <span className="is-size-7">2:30PM</span>
-          <div className="notification is-success is-light">
-            Primar lorem ipsum dolor sit amet.
-          </div>
-        </section>
-        <section className="p-4">
-          <strong>Tobey</strong> <span className="is-size-7">2:30PM</span>
-          <div className="notification is-light">
-            Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus
-            diam, et dictum <a>felis venenatis</a> efficitur.
-          </div>
-        </section>
-      </main>
-      <footer className="footer page-footer">
-        <nav className="level">
-          <div className="level-left">
-            <div className="level-item">
-              <div className="field has-addons">
-                <p className="control">
-                  <input
-                    className="input"
-                    type="text"
-                    placeholder="Message"
-                    disabled={!Auth.loggedIn()}
-                  />
-                </p>
-                <p className="control">
-                  <button
-                    disabled={!Auth.loggedIn()}
-                    className="mx-2 button is-primary"
-                  >
-                    Send
-                  </button>
-                </p>
-              </div>
+        <h2 ref={subTitle} className="subtitle">{data?.chatRoom.name}</h2>
+        {messages.map((message) => (
+          <section className="p-4" key={message._id}>
+            <strong>{message?.username}</strong>{" "}
+            <span className="is-size-7">
+              {dateFormat(message.createdAt, "dateAndTime")}
+            </span>
+            <div
+              className={
+                Auth.getProfile().data.username === message.username
+                  ? "notification is-info"
+                  : "notification is-light"
+              }
+            >
+              {message.messageText}
             </div>
-          </div>
-        </nav>
-      </footer>
+            {/* <button
+              className="button is-small is-danger is-light"
+              onClick={(e) => handleRemoveMessage(e, message._id)}
+            >
+              Delete
+            </button> */}
+          </section>
+        ))}
+      </main>
+      <AddMessage
+        subTitle={subTitle}
+        chatRoomId={chatRoomId}
+        messages={messages}
+        setMessages={setMessages}
+        scrollToTop={scrollToTop}
+      />
     </>
   );
 };
