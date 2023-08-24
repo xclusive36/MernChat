@@ -76,5 +76,6 @@ export const typeDefs = `#graphql
     updateChatRoom(name: String!, users: [ID]): ChatRoom
     userOnline(_id: ID!): User
     userOffline(_id: ID!): User
+    removeAllMessages(chatRoomId: ID!): Message
   }
 `;

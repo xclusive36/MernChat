@@ -1,22 +1,22 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import {
-  useQuery,
-  // useMutation
-} from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import { QUERY_CHATROOM, QUERY_MESSAGES } from "../utils/queries";
-// import { REMOVE_MESSAGE } from "../utils/mutations";
 import { dateFormat } from "../utils/dateFormat.js";
 
 import Header from "../components/Header";
 import AddMessage from "../components/AddMessage";
 import Auth from "../utils/auth";
+import RemoveAllMessages from "../components/RemoveAllMessages";
+const token = Auth.loggedIn() ? Auth.getToken() : null; // define token variable as Auth.loggedIn() ? Auth.getToken() : null
 
 const Chat = () => {
   // Use `useParams()` to retrieve value of the route parameter `:chatRoomId`
   const { chatRoomId } = useParams();
   const [messages, setMessages] = useState([]); // define messages state variable as [messages, setMessages]
   const subTitle = useRef();
+  const subList = useRef();
+  const containerEl = useRef(null);
 
   // Use `useQuery()` hook to retrieve chatRoom data
   const { loading, data } = useQuery(QUERY_CHATROOM, {
@@ -28,44 +28,39 @@ const Chat = () => {
   });
 
   useEffect(() => {
-    if (messageData) setMessages(messageData.messages);
+    if (token && messageData) setMessages(messageData.messages);
   }, [messageData]);
-
-  // const [removeMessage] = useMutation(REMOVE_MESSAGE);
-
-  // const handleRemoveMessage = async (e, messageId) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     await removeMessage({
-  //       variables: { id: messageId },
-  //       context: {
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem("id_token")}`,
-  //         },
-  //       },
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //   }
-  // };
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
   const scrollToTop = () => {
+    // scroll to top of page
     subTitle.current.scrollIntoView({
-      behavior: "smooth",
-      block: "center",
+      // scroll page to the location where the element with ref={subTitle} is located
+      behavior: "smooth", // set scroll behavior to smooth
+      block: "center", // set scroll block to center
+    });
+  };
+
+  const scrollToBottom = () => {
+    // scroll to bottom of page
+    subList.current.scrollIntoView({
+      // scroll page to the location where the element with ref={subList} is located
+      behavior: "smooth", // set scroll behavior to smooth
+      block: "center", // set scroll block to center
     });
   };
 
   return (
-    <>
+    <div ref={containerEl}>
       <Header />
       <main className="container mx-4">
-        <h2 ref={subTitle} className="subtitle">{data?.chatRoom.name}</h2>
+        <h2 ref={subTitle} className="subtitle">
+          {data?.chatRoom.name}
+        </h2>
+        <RemoveAllMessages chatRoomId={chatRoomId} />
         {messages.map((message) => (
           <section className="p-4" key={message._id}>
             <strong>{message?.username}</strong>{" "}
@@ -81,12 +76,6 @@ const Chat = () => {
             >
               {message.messageText}
             </div>
-            {/* <button
-              className="button is-small is-danger is-light"
-              onClick={(e) => handleRemoveMessage(e, message._id)}
-            >
-              Delete
-            </button> */}
           </section>
         ))}
       </main>
@@ -96,8 +85,10 @@ const Chat = () => {
         messages={messages}
         setMessages={setMessages}
         scrollToTop={scrollToTop}
+        scrollToBottom={scrollToBottom}
       />
-    </>
+      <div className="subList" ref={subList} />
+    </div>
   );
 };
 

@@ -51,6 +51,11 @@ h2 {
   background-color: rgb(0 0 0 / 50%);
 }
 
+.subList {
+  /* Set element 500 px below the bottom of the viewport */
+  bottom: -500px;
+}
+
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;

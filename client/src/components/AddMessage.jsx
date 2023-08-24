@@ -1,49 +1,48 @@
-import { createRef } from "react";
 import { useMutation } from "@apollo/client";
 import { ADD_MESSAGE } from "../utils/mutations";
 import Auth from "../utils/auth.js";
 
-const AddMessage = ({ chatRoomId, messages, setMessages, scrollToTop }) => {
-  const [addMessage, { error }] = useMutation(ADD_MESSAGE);
+const AddMessage = ({ chatRoomId, messages, setMessages, scrollToBottom }) => {
+  // component Adds a message to the chat room. It is called when the form is submitted and takes in the chatRoomId, messages, setMessages, and scrollToBottom as props
+  const [addMessage, { error }] = useMutation(ADD_MESSAGE); // add mutation function addMessage to mutate through the GraphQL API server
   const token = Auth.loggedIn() ? Auth.getToken() : null; // define token variable as Auth.loggedIn() ? Auth.getToken() : null
-  const footerDocument = createRef();
-
-  if (!token) {
-    window.location.assign("/");
-  }
 
   const handleAddMessage = async (event) => {
-    event.preventDefault();
-
-    const headers = {
-      // define headers variable for simplicity
-      headers: {
-        authorization: token ? `Bearer ${token}` : "",
-      },
-    };
+    // function is called when form is submitted to add a message
+    event.preventDefault(); // prevent default form submission
 
     if (!token) {
       // if token is null
       console.log("No token provided"); // log "No token provided"
-      return false; // return false
+      return false; // return false to exit function
     }
 
-    const messageText = event.target[0].value;
+    const messageText = event.target[0].value; // set messageText variable to value of input field
     if (messageText) {
+      // if messageText is not empty
       try {
-        const { data } = await addMessage({
+        // try to execute addMessage mutation
+        await addMessage({
+          // await addMessage mutation with 2 variables and context object.
+          // addMessage is a mutation call to the GraphQL API server
           variables: { messageText, chatRoomId },
-          context: headers, // set context to headers
-        });
-
-        if (data) {
-          setMessages([data.addMessage, ...messages]);
-          event.target[0].value = "";
-          scrollToTop();
-          console.log("Message added successfully!");
-
-          return true;
-        }
+          context: {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("id_token")}`,
+            },
+          },
+        })
+          .then((res) => {
+            setMessages([...messages, res.data.addMessage]);
+          })
+          .then(() => {
+            setTimeout(() => {
+              event.target[0].value = "";
+              event.target[0].focus();
+              scrollToBottom();
+              console.log("Message added successfully!");
+            }, 200);
+          });
       } catch (err) {
         console.error(err);
         console.error(error);
@@ -52,7 +51,7 @@ const AddMessage = ({ chatRoomId, messages, setMessages, scrollToTop }) => {
   };
 
   return (
-    <footer ref={footerDocument} className="footer page-footer">
+    <footer className="footer page-footer">
       <form onSubmit={handleAddMessage}>
         <div className="field has-addons">
           <div className="control is-expanded">

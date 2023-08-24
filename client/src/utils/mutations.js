@@ -78,3 +78,15 @@ export const REMOVE_MESSAGE = gql`
     }
   }
 `;
+
+export const REMOVE_ALL_MESSAGES = gql`
+  mutation removeAllMessages($chatRoomId: ID!) {
+    removeAllMessages(chatRoomId: $chatRoomId) {
+      _id
+      messageText
+      createdAt
+      chatRoomId
+      username
+    }
+  }
+`;
