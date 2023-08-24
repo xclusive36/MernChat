@@ -72,6 +72,7 @@ export const typeDefs = `#graphql
     addMessage(messageText: String!, chatRoomId: ID!): Message
     addChatRoom(name: String!): ChatRoom
     removeChatRoom(_id: ID!): ChatRoom
+    removeAllChatRooms: ChatRoom
     removeMessage(_id: ID!): Message
     updateChatRoom(name: String!, users: [ID]): ChatRoom
     userOnline(_id: ID!): User

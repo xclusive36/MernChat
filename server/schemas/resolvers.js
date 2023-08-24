@@ -122,6 +122,13 @@ export const resolvers = {
 
       throw new AuthenticationError("You need to be logged in!");
     },
+    removeAllChatRooms: async (parent, args, context) => {
+      if (context.user) {
+        return ChatRoom.deleteMany({});
+      }
+
+      throw new AuthenticationError("You need to be logged in!");
+    },
     removeMessage: async (parent, { _id }, context) => {
       if (context.user) {
         return Message.findOneAndDelete({

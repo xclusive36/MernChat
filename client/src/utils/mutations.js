@@ -55,6 +55,15 @@ export const REMOVE_CHATROOM = gql`
   }
 `;
 
+export const REMOVE_ALL_CHATROOMS = gql`
+  mutation removeAllChatRooms {
+    removeAllChatRooms {
+      _id
+      name
+    }
+  }
+`;
+
 export const ADD_MESSAGE = gql`
   mutation addMessage($messageText: String!, $chatRoomId: ID!) {
     addMessage(messageText: $messageText, chatRoomId: $chatRoomId) {
