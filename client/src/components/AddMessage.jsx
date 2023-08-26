@@ -1,8 +1,8 @@
 import { useMutation } from "@apollo/client";
 import { ADD_MESSAGE } from "../utils/mutations";
-import Auth from "../utils/auth.js";
+import Auth from "../utils/auth.js"; // Auth utility provides various functions for authentication
 
-const AddMessage = ({ chatRoomId, messages, setMessages, scrollToBottom }) => {
+const AddMessage = ({ chatRoomId, scrollToBottom }) => {
   // component Adds a message to the chat room. It is called when the form is submitted and takes in the chatRoomId, messages, setMessages, and scrollToBottom as props
   const [addMessage, { error }] = useMutation(ADD_MESSAGE); // add mutation function addMessage to mutate through the GraphQL API server
   const token = Auth.loggedIn() ? Auth.getToken() : null; // define token variable as Auth.loggedIn() ? Auth.getToken() : null
@@ -32,9 +32,9 @@ const AddMessage = ({ chatRoomId, messages, setMessages, scrollToBottom }) => {
             },
           },
         })
-          .then((res) => {
-            setMessages([...messages, res.data.addMessage]);
-          })
+          // .then((res) => {
+          //   setMessages([...messages, res.data.addMessage]);
+          // })
           .then(() => {
             setTimeout(() => {
               event.target[0].value = "";

@@ -4,7 +4,10 @@ import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import bodyParser from "body-parser";
 import express from "express";
-import http from "http";
+import { createServer } from "http";
+import { makeExecutableSchema } from "@graphql-tools/schema";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/lib/use/ws";
 import path from "path";
 import { authMiddleware } from "./utils/auth.js"; // import authMiddleware function to be configured with the Apollo Server
 import { typeDefs, resolvers } from "./schemas/index.js"; // import typeDefs and resolvers from schemas folder
@@ -14,22 +17,45 @@ import db from "./config/connection.js"; // import db from config/connection
 // Define a port to run the server on, default to 4000
 const PORT = process.env.PORT || 4000;
 
+const schema = makeExecutableSchema({ typeDefs, resolvers });
+
 // Required logic for integrating with Express
 const app = express();
 // Our httpServer handles incoming requests to our Express app.
 // Below, we tell Apollo Server to "drain" this httpServer,
 // enabling our servers to shut down gracefully.
+const httpServer = createServer(app);
 
-const httpServer = http.createServer(app);
+// Create our WebSocket server using the HTTP server we just set up.
+const wsServer = new WebSocketServer({
+  server: httpServer,
+  path: "/graphql",
+});
+// Save the returned server's info so we can shutdown this server later
+const serverCleanup = useServer({ schema }, wsServer);
 
 // Same ApolloServer initialization as before, plus the drain plugin
 // for our httpServer.
 const server = new ApolloServer({
   // create a new Apollo Server instance and pass in our schema data, context, and plugins
-  typeDefs, // add typeDefs
-  resolvers, // add resolvers
+  schema, // add schema
+  // typeDefs, // add typeDefs
+  // resolvers, // add resolvers
   context: authMiddleware, // apply authMiddleware function to the server as the context
-  plugins: [ApolloServerPluginDrainHttpServer({ httpServer })], // add the drain plugin
+  plugins: [
+    // Proper shutdown for the HTTP server.
+    ApolloServerPluginDrainHttpServer({ httpServer }),
+    // Proper shutdown for the WebSocket server.
+    {
+      async serverWillStart() {
+        return {
+          async drainServer() {
+            await serverCleanup.dispose();
+          },
+        };
+      },
+    },
+  ],
 });
 
 if (process.env.NODE_ENV === "production") {

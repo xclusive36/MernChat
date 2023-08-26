@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@apollo/client";
+import { useQuery, useSubscription } from "@apollo/client";
 import { QUERY_CHATROOM, QUERY_MESSAGES } from "../utils/queries";
+import { MESSAGES_SUBSCRIPTION } from "../utils/subscriptions";
 import { dateFormat } from "../utils/dateFormat.js";
 
 import Header from "../components/Header";
@@ -19,7 +20,7 @@ const Chat = () => {
   const containerEl = useRef(null);
 
   // Use `useQuery()` hook to retrieve chatRoom data
-  const { loading, data } = useQuery(QUERY_CHATROOM, {
+  const { data } = useQuery(QUERY_CHATROOM, {
     variables: { id: chatRoomId },
   });
 
@@ -27,13 +28,24 @@ const Chat = () => {
     variables: { chatRoomId },
   });
 
+  const { data: subscriptionData } = useSubscription(MESSAGES_SUBSCRIPTION, {
+    variables: { chatRoomId },
+  });
+
+  useEffect(() => {
+    if (subscriptionData) {
+      console.log(subscriptionData);
+      setMessages([...messages, subscriptionData.messageAdded]);
+      setTimeout(() => {
+        scrollToBottom();
+        console.log("New Message added!");
+      }, 200);
+    }
+  }, [subscriptionData]);
+
   useEffect(() => {
     if (token && messageData) setMessages(messageData.messages);
   }, [messageData]);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   const scrollToTop = () => {
     // scroll to top of page

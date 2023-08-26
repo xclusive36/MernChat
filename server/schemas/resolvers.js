@@ -1,5 +1,8 @@
 import { User, ChatRoom, Message } from "../models/index.js";
 import { signToken } from "../utils/auth.js";
+import { PubSub } from "graphql-subscriptions";
+
+const pubsub = new PubSub();
 
 // Resolvers define how to fetch the types defined in your schema.
 // This resolver retrieves books from the "books" array above.
@@ -12,7 +15,7 @@ export const resolvers = {
       return User.findOne({ _id });
     },
     messages: async (parent, { chatRoomId }) => {
-      return (await Message.find({ chatRoomId: chatRoomId })).reverse();
+      return (await Message.find({ chatRoomId: chatRoomId }));
     },
     message: async (parent, { _id }) => {
       return Message.findOne({ _id });
@@ -95,11 +98,18 @@ export const resolvers = {
     addMessage: async (parent, { messageText, chatRoomId }, context) => {
       if (context.user) {
         const { username } = JSON.parse(context.user);
-        return Message.create({
+        
+        const message = await Message.create({
           messageText,
           username: username,
           chatRoomId,
         });
+
+        pubsub.publish("MESSAGE_CREATED", {
+          messageAdded: message,
+        }); // publish the message to the channel
+
+        return message;
       }
 
       throw new AuthenticationError("You need to be logged in!");
@@ -175,6 +185,11 @@ export const resolvers = {
       }
 
       throw new AuthenticationError("You need to be logged in!");
+    },
+  },
+  Subscription: {
+    messageAdded: {
+      subscribe: () => pubsub.asyncIterator(["MESSAGE_CREATED"]),
     },
   },
 };

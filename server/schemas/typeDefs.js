@@ -79,4 +79,13 @@ export const typeDefs = `#graphql
     userOffline(_id: ID!): User
     removeAllMessages(chatRoomId: ID!): Message
   }
+
+  # The "Subscription" type is special: it lists all of the available subscriptions that
+  # clients can subscribe to, along with the return type for each. In this
+  # case, the "messageAdded" subscription returns a Message (defined above).
+  # The "chatRoomAdded" subscription returns a ChatRoom (defined above).
+  type Subscription {
+    messageAdded(chatRoomId: ID!): Message
+    chatRoomAdded: ChatRoom
+  }
 `;
