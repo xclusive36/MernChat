@@ -18,9 +18,10 @@ export const resolvers = {
     messages: async (parent, { chatRoomId }) => {
       const messages = await Message.find({ chatRoomId: chatRoomId })
         // .offset(0) // skip 0 documents
-        .sort({ createdAt: 1 }) // sort ascending createdAt
-        .limit(20); // limit to 20 messages
-      return messages;
+        .limit(20) // limit to 20 messages per query
+        .sort({ createdAt: -1 }); // sort descending by createdAt date
+      return messages.reverse(); // reverse the array to get the messages in ascending order (oldest first)
+      // so that the newest messages are at the bottom of the chat window. Then return the array of messages.
     },
     message: async (parent, { _id }) => {
       return Message.findOne({ _id });

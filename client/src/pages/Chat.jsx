@@ -95,8 +95,8 @@ const Chat = () => {
             <div
               className={
                 checkIfUserCreatedMessage(message)
-                  ? "notification is-info mb-0"
-                  : "notification is-light mb-0"
+                  ? "notification is-info mb-0 py-2 px-4"
+                  : "notification is-light mb-0 py-2 px-4"
               }
             >
               {message?.messageText}
