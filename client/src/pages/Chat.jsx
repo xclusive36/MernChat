@@ -44,7 +44,7 @@ const Chat = () => {
   }, [subscriptionData]);
 
   useEffect(() => {
-    if (token && messageData) setMessages(messageData.messages);
+    if (messageData) setMessages(messageData?.messages);
   }, [messageData]);
 
   const scrollToTop = () => {
@@ -65,6 +65,18 @@ const Chat = () => {
     });
   };
 
+  const checkIfUserCreatedMessage = (message) => {
+    if (!token) return false; // if user is not logged in, return false (user is not logged in if token is null)
+
+    // Get the username from Auth.getProfile().data.username
+    const loggedInUser = Auth.getProfile().data.username || null;
+
+    // User is logged in, check if the message username is the same as the logged in user
+    if (message?.username === loggedInUser) return true; // if message username is the same as the logged in user, return true
+
+    return false; // if message username is not the same as the logged in user, return false
+  };
+
   return (
     <div ref={containerEl}>
       <Header />
@@ -73,20 +85,20 @@ const Chat = () => {
           {data?.chatRoom.name}
         </h2>
         <RemoveAllMessages chatRoomId={chatRoomId} />
-        {messages.map((message) => (
-          <section className="p-4" key={message._id}>
+        {messages?.map((message) => (
+          <section className="p-4" key={message?._id}>
             <strong>{message?.username}</strong>{" "}
             <span className="is-size-7">
-              {dateFormat(message.createdAt, "dateAndTime")}
+              {dateFormat(message?.createdAt, "dateAndTime")}
             </span>
             <div
               className={
-                Auth.getProfile().data.username === message.username
+                checkIfUserCreatedMessage(message)
                   ? "notification is-info"
                   : "notification is-light"
               }
             >
-              {message.messageText}
+              {message?.messageText}
             </div>
           </section>
         ))}
