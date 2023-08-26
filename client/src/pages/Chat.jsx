@@ -37,7 +37,7 @@ const Chat = () => {
       console.log(subscriptionData);
       setMessages([...messages, subscriptionData.messageAdded]);
       setTimeout(() => {
-        scrollToBottom();
+        scrollToBottom("smooth");
         console.log("New Message added!");
       }, 200);
     }
@@ -45,6 +45,10 @@ const Chat = () => {
 
   useEffect(() => {
     if (messageData) setMessages(messageData?.messages);
+
+    setTimeout(() => {
+      scrollToBottom("instant");
+    }, 200);
   }, [messageData]);
 
   const scrollToTop = () => {
@@ -56,11 +60,11 @@ const Chat = () => {
     });
   };
 
-  const scrollToBottom = () => {
+  const scrollToBottom = (behavior) => {
     // scroll to bottom of page
     subList.current.scrollIntoView({
       // scroll page to the location where the element with ref={subList} is located
-      behavior: "smooth", // set scroll behavior to smooth
+      behavior: behavior, // set scroll behavior to smooth
       block: "center", // set scroll block to center
     });
   };
@@ -87,19 +91,19 @@ const Chat = () => {
         <RemoveAllMessages chatRoomId={chatRoomId} />
         {messages?.map((message) => (
           <section className="p-4" key={message?._id}>
-            <strong>{message?.username}</strong>{" "}
-            <span className="is-size-7">
-              {dateFormat(message?.createdAt, "dateAndTime")}
-            </span>
+            <strong>{message?.username}</strong>
             <div
               className={
                 checkIfUserCreatedMessage(message)
-                  ? "notification is-info"
-                  : "notification is-light"
+                  ? "notification is-info mb-0"
+                  : "notification is-light mb-0"
               }
             >
               {message?.messageText}
             </div>
+            <span className="is-size-7">
+              {dateFormat(message?.createdAt, "dateAndTime")}
+            </span>
           </section>
         ))}
       </main>

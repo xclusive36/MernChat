@@ -39,7 +39,7 @@ const AddMessage = ({ chatRoomId, scrollToBottom }) => {
             setTimeout(() => {
               event.target[0].value = "";
               event.target[0].focus();
-              scrollToBottom();
+              scrollToBottom("smooth");
               console.log("Message added successfully!");
             }, 200);
           });

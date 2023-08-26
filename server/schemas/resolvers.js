@@ -14,8 +14,13 @@ export const resolvers = {
     user: async (parent, { _id }) => {
       return User.findOne({ _id });
     },
+    // get the last 20 messages from a chatroom
     messages: async (parent, { chatRoomId }) => {
-      return (await Message.find({ chatRoomId: chatRoomId }));
+      const messages = await Message.find({ chatRoomId: chatRoomId })
+        // .offset(0) // skip 0 documents
+        .sort({ createdAt: 1 }) // sort ascending createdAt
+        .limit(20); // limit to 20 messages
+      return messages;
     },
     message: async (parent, { _id }) => {
       return Message.findOne({ _id });
@@ -98,7 +103,7 @@ export const resolvers = {
     addMessage: async (parent, { messageText, chatRoomId }, context) => {
       if (context.user) {
         const { username } = JSON.parse(context.user);
-        
+
         const message = await Message.create({
           messageText,
           username: username,
