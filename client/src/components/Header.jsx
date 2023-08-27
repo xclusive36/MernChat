@@ -49,7 +49,7 @@ const Header = () => {
               <div className="buttons">
                 {Auth.loggedIn() ? ( // if logged in show my account & logout buttons
                   <>
-                    <Link to={`/`} className="button is-primary">
+                    <Link to={`/account`} className="button is-primary">
                       My Account
                     </Link>
                     <Link to={`/`} className="button is-link" onClick={logout}>

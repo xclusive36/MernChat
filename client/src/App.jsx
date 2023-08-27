@@ -16,6 +16,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Chat from "./pages/Chat";
 import Auth from "./utils/auth";
+import Account from "./pages/Account";
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
@@ -113,6 +114,10 @@ const router = createBrowserRouter([
     path: "/chat/:chatRoomId",
     element: <Chat />,
   },
+  {
+    path: "/account",
+    element: <Account />,
+  }
   // {
   //   path: "*",
   //   element: <Home />,
