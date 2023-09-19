@@ -2,7 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import cors from "cors";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-import bodyParser from "body-parser";
+// import bodyParser from "body-parser";
 import express from "express";
 import { createServer } from "http";
 import { makeExecutableSchema } from "@graphql-tools/schema";
@@ -77,7 +77,7 @@ app.use(
     origin: "*",
     credentials: true,
   }),
-  bodyParser.json(),
+  express.json(),
   // expressMiddleware accepts the same arguments:
   // an Apollo Server instance and optional configuration options
   expressMiddleware(server, {
