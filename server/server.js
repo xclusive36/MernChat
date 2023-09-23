@@ -15,7 +15,7 @@ import { typeDefs, resolvers } from "./schemas/index.js"; // import typeDefs and
 import db from "./config/connection.js"; // import db from config/connection
 
 // Define a port to run the server on, default to 4000
-const PORT = import.meta.env.PORT || 4000;
+const PORT = process.env.PORT || 4000;
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
