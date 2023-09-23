@@ -20,7 +20,7 @@ import Account from "./pages/Account";
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql",
+  uri: `${location.protocol}//${location.hostname}:4000/graphql`,
 });
 
 // get the authentication token from local storage if it exists
@@ -28,7 +28,9 @@ const token = localStorage.getItem("id_token");
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: "ws://localhost:4000/graphql",
+    url: `${location.protocol === "https:" ? "wss" : "ws"}://${
+      location.hostname
+    }:4000/graphql`,
     connectionParams: {
       authToken: token,
     },
