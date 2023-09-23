@@ -4,7 +4,7 @@
   "description": "",
   "main": "server/server.js",
   "scripts": {
-    "start": "concurrently \"node server --ignore client\" \"cd client && npm run preview\"",
+    "start": "concurrently \"node server --ignore client\" \"cd client && serve -s dist\"",
     "build": "cd client && npm run build",
     "install": "cd server && npm i && cd ../client && npm i",
     "develop": "concurrently \"node server --ignore client\" \"cd client && npm run dev\""
@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "serve": "^14.2.1"
   }
 }
