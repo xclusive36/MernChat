@@ -22,7 +22,7 @@ const PORT = import.meta.env.VITE_PORT || 4000;
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
-  uri: "/graphql",
+  uri: "https://mernchat-server-394cafca4b0a.herokuapp.com/graphql",
 });
 
 // get the authentication token from local storage if it exists
@@ -30,7 +30,7 @@ const token = localStorage.getItem("id_token");
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: `/graphql`,
+    url: `wss://mernchat-server-394cafca4b0a.herokuapp.com/graphql`,
     connectionParams: {
       authToken: token,
     },
