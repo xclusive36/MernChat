@@ -19,12 +19,13 @@ import Auth from "./utils/auth";
 import Account from "./pages/Account";
 
 const PORT = import.meta.env.PORT || 4000;
+console.log(PORT);
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
   uri: `${
     location.hostname === "localhost"
-      ? "http://localhost"
+      ? "http://localhost:4000"
       : location.protocol + "//" + location.hostname
   }:${PORT}/graphql`,
 });
