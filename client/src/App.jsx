@@ -18,8 +18,8 @@ import Chat from "./pages/Chat";
 import Auth from "./utils/auth";
 import Account from "./pages/Account";
 
-const PORT = import.meta.env.PORT || 4000;
-console.log(import.meta.env.PORT);
+const PORT = import.meta.env.SERVER_PORT || 4000;
+console.log(import.meta.env.SERVER_PORT);
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
