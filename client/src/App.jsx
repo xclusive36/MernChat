@@ -11,7 +11,7 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 
-console.log(import.meta.env.VITE_PORT);
+const PORT = import.meta.env.VITE_PORT || 4000;
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -26,7 +26,7 @@ const httpLink = createHttpLink({
     location.hostname === "localhost"
       ? "http://localhost"
       : location.protocol + "//" + location.hostname
-  }/graphql`,
+  }:${PORT}/graphql`,
 });
 
 // get the authentication token from local storage if it exists
@@ -36,7 +36,7 @@ const wsLink = new GraphQLWsLink(
   createClient({
     url: `${location.protocol === "https:" ? "wss" : "ws"}://${
       location.hostname
-    }/graphql`,
+    }:${PORT}/graphql`,
     connectionParams: {
       authToken: token,
     },
