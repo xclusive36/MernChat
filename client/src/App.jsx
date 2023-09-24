@@ -11,7 +11,7 @@ import { getMainDefinition } from "@apollo/client/utilities";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 
-console.log(import.meta.env.PORT);
+console.log(import.meta.env.VITE_PORT);
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
