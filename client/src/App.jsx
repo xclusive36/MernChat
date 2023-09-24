@@ -18,11 +18,15 @@ import Chat from "./pages/Chat";
 import Auth from "./utils/auth";
 import Account from "./pages/Account";
 
-const PORT = import.meta.env.VITE_PORT || 4000;
+const PORT = import.meta.env.PORT || 4000;
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
-  uri: "https://mernchat-server-394cafca4b0a.herokuapp.com/graphql",
+  uri: `${
+    location.hostname === "localhost"
+      ? `http://localhost:${PORT}`
+      : location.protocol + "//" + location.hostname
+  }/graphql`,
 });
 
 // get the authentication token from local storage if it exists
@@ -30,7 +34,9 @@ const token = localStorage.getItem("id_token");
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: `wss://mernchat-server-394cafca4b0a.herokuapp.com/graphql`,
+    url: `${location.protocol === "https:" ? "wss" : "ws"}://${
+      location.hostname
+    }:${PORT}/graphql`,
     connectionParams: {
       authToken: token,
     },
