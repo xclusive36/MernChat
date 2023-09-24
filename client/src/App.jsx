@@ -24,7 +24,7 @@ const httpLink = createHttpLink({
     location.hostname === "localhost"
       ? "http://localhost:4000"
       : location.protocol + "//" + location.hostname
-  }/graphql`,
+  }:4000/graphql`,
 });
 
 // get the authentication token from local storage if it exists
@@ -34,7 +34,7 @@ const wsLink = new GraphQLWsLink(
   createClient({
     url: `${location.protocol === "https:" ? "wss" : "ws"}://${
       location.hostname
-    }/graphql`,
+    }:4000/graphql`,
     connectionParams: {
       authToken: token,
     },
