@@ -1,1 +1,1 @@
-web: npm start -b $PORT
+web: npm start
