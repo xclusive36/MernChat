@@ -30,9 +30,7 @@ const token = localStorage.getItem("id_token");
 
 const wsLink = new GraphQLWsLink(
   createClient({
-    url: `${location.protocol === "https:" ? "wss" : "ws"}://${
-      location.hostname
-    }/graphql`,
+    url: `/graphql`,
     connectionParams: {
       authToken: token,
     },
