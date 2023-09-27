@@ -18,15 +18,15 @@ import Chat from "./pages/Chat";
 import Auth from "./utils/auth";
 import Account from "./pages/Account";
 
-const PORT = import.meta.env.VITE_PORT || 4000;
+const PORT = import.meta.env.PORT || 4000;
 
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
   uri: `${
     location.hostname === "localhost"
-      ? `http://localhost`
+      ? `http://localhost:4000`
       : location.protocol + "//" + location.hostname
-  }:${PORT}/graphql`,
+  }/graphql`,
 });
 
 // get the authentication token from local storage if it exists
@@ -36,7 +36,7 @@ const wsLink = new GraphQLWsLink(
   createClient({
     url: `${location.protocol === "https:" ? "wss" : "ws"}://${
       location.hostname
-    }:${PORT}/graphql`,
+    }/graphql`,
     connectionParams: {
       authToken: token,
     },
