@@ -12,6 +12,8 @@ This is far from a complete application. It is a simple proof of concept. It is 
 
 Setup for Heroku deployment, use MONGODB_URI environment variable to set MongoDB connection string. Use NODE_ENV environment variable to set production or development mode.
 
+Be sure to update your deployment url in the cors origin in the server.js file.
+
 ## Table of Contents
 
 - [Installation](#installation)
