@@ -18,8 +18,6 @@ import Chat from "./pages/Chat";
 import Auth from "./utils/auth";
 import Account from "./pages/Account";
 
-const PORT = import.meta.env.PORT || 4000;
-
 // Construct our main GraphQL API endpoint
 const httpLink = createHttpLink({
   uri: `${
@@ -125,7 +123,7 @@ const router = createBrowserRouter([
   {
     path: "/account",
     element: <Account />,
-  }
+  },
   // {
   //   path: "*",
   //   element: <Home />,

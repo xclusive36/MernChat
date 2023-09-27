@@ -82,15 +82,10 @@ const __dirname = path.resolve();
 // Ensure we wait for our server to start
 await server.start();
 
-// if (process.env.NODE_ENV === "production") {
-//   app.use(express.static(path.join(__dirname, "../client/dist")));
-// }
-
-// app.get("/", (req, res) => {
-//   res.sendFile(path.join(__dirname, "../client/dist/index.html")); // send index.html file if on production
-// });
-
+// Serve the client's production build
 if (process.env.NODE_ENV === "production") {
+  // Serve any static files from the client build directory (client/dist)
+  // import.meta.url is the current file path
   app.use(
     express.static(
       path.join(new URL("../client/dist", import.meta.url).pathname)
@@ -98,6 +93,8 @@ if (process.env.NODE_ENV === "production") {
   );
 }
 
+// Define any API routes before this runs
+// route to serve up the index.html page in client/dist directory
 app.get("/", (req, res) => {
   res.sendFile(
     path.join(new URL("../client/dist/index.html", import.meta.url).pathname)
@@ -127,4 +124,5 @@ db.once("open", () => {
 // Modified server startup
 await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
 
+// Log where we can go to test our GraphQL API
 console.log(`🚀 Server ready at http://localhost:4000/graphql`);

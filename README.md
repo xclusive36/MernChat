@@ -2,11 +2,15 @@
 
 ## Description
 
-MernChat is a simple MERN stack chatroom application created using React, Vite, Apollo Graphql, Express, and MongoDB with Mongoose ORM. Visitors can search for and join existing chatrooms. Visitors can create an account or login. When logged in, users may create new chatrooms. Join chatrooms and chat.
+MernChat is a simple barebones MERN full stack chatroom application created using React, Vite, Apollo Graphql, Express, and MongoDB with Mongoose ORM. Visitors can search for and join existing chatrooms. Visitors can create an account or login. When logged in, users may create new chatrooms. Join chatrooms and chat.
 
 Chat page is updated in real time using GraphQL subscriptions with Web Sockets Chat messages are stored in MongoDB.
 
 Uses Bulma CSS framework for styling.
+
+This is far from a complete application. It is a simple proof of concept. It is not intended for production use in its current state.
+
+Setup for Heroku deployment, use MONGODB_URI environment variable to set MongoDB connection string. Use NODE_ENV environment variable to set production or development mode.
 
 ## Table of Contents
 
