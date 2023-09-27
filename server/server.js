@@ -2,8 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import cors from "cors";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
-// import bodyParser from "body-parser";
-import express from "express";
+import express, { json, urlencoded } from "express";
 import { createServer } from "http";
 import { makeExecutableSchema } from "@graphql-tools/schema";
 import { WebSocketServer } from "ws";
@@ -15,24 +14,32 @@ import { typeDefs, resolvers } from "./schemas/index.js"; // import typeDefs and
 import db from "./config/connection.js"; // import db from config/connection
 
 // Define a port to run the server on, default to 4000
-const PORT = process.env.VITE_PORT || 4000;
+const PORT = process.env.PORT || 4000;
 
 const schema = makeExecutableSchema({ typeDefs, resolvers });
 
 // Required logic for integrating with Express
 const app = express();
+
+app.use(urlencoded({ extended: false })); // add middleware to parse incoming JSON data
+app.use(json()); // add middleware to parse incoming JSON data
+app.use(
+  cors(
+    // add cors middleware to allow cross-origin requests
+    {
+      origin: [
+        "http://localhost:3000",
+        "https://mernchat-server-394cafca4b0a.herokuapp.com/",
+      ],
+      credentials: true,
+    }
+  )
+);
+
 // Our httpServer handles incoming requests to our Express app.
 // Below, we tell Apollo Server to "drain" this httpServer,
 // enabling our servers to shut down gracefully.
 const httpServer = createServer(app);
-
-// Create our WebSocket server using the HTTP server we just set up.
-const wsServer = new WebSocketServer({
-  server: httpServer,
-  path: "/graphql",
-});
-// Save the returned server's info so we can shutdown this server later
-const serverCleanup = useServer({ schema }, wsServer);
 
 // Same ApolloServer initialization as before, plus the drain plugin
 // for our httpServer.
@@ -58,30 +65,38 @@ const server = new ApolloServer({
   ],
 });
 
-if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../client/dist")));
-}
-
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
+// Create our WebSocket server using the HTTP server we just set up.
+const wsServer = new WebSocketServer({
+  server: httpServer,
+  path: "/graphql",
 });
 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/dist/index.html"));
-});
+// Save the returned server's info so we can shutdown this server later
+const serverCleanup = useServer({ schema }, wsServer);
+
+const __dirname = path.resolve();
 
 // Ensure we wait for our server to start
 await server.start();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(
+    express.static(
+      path.join(new URL("../client/dist", import.meta.url).pathname)
+    )
+  );
+}
+
+app.get("/", (req, res) => {
+  res.sendFile(
+    path.join(new URL("../client/dist/index.html", import.meta.url).pathname)
+  );
+});
 
 // Set up our Express middleware to handle CORS, body parsing,
 // and our expressMiddleware function.
 app.use(
   "/graphql",
-  cors({
-    origin: "*",
-    credentials: true,
-  }),
-  express.json(),
   // expressMiddleware accepts the same arguments:
   // an Apollo Server instance and optional configuration options
   expressMiddleware(server, {
@@ -101,4 +116,6 @@ db.once("open", () => {
 // Modified server startup
 await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
 
-console.log(`🚀 Server ready at ${location.protocol}//${location.hostname}:${PORT}/graphql`);
+console.log(
+  `🚀 Server ready at ${location.protocol}//${location.hostname}:${PORT}/graphql`
+);
