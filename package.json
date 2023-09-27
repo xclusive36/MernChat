@@ -4,16 +4,16 @@
   "description": "",
   "main": "server/server.js",
   "scripts": {
-    "start": "concurrently \"node server --ignore client\" \"cd client && serve -s dist\"",
-    "build": "cd client && npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/server.js",
     "install": "cd server && npm i && cd ../client && npm i",
+    "build": "cd client && npm run build",
     "develop": "concurrently \"node server --ignore client\" \"cd client && npm run dev\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "concurrently": "^8.2.0",
-    "serve": "^14.2.1"
+    "concurrently": "^8.2.0"
   }
 }
