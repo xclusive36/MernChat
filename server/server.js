@@ -29,7 +29,7 @@ app.use(
     {
       origin: [
         "http://localhost:3000",
-        "https://mernchat-server-394cafca4b0a.herokuapp.com/",
+        "https://mernchat-e5d80fcc7baf.herokuapp.com/",
       ],
       credentials: true,
     }
