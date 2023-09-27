@@ -2,6 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import cors from "cors";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+// import bodyParser from "body-parser";
 import express, { json, urlencoded } from "express";
 import { createServer } from "http";
 import { makeExecutableSchema } from "@graphql-tools/schema";
@@ -76,8 +77,18 @@ const serverCleanup = useServer({ schema }, wsServer);
 
 const __dirname = path.resolve();
 
+// Note you must call `start()` on the `ApolloServer`
+// instance before passing the instance to `expressMiddleware`
 // Ensure we wait for our server to start
 await server.start();
+
+// if (process.env.NODE_ENV === "production") {
+//   app.use(express.static(path.join(__dirname, "../client/dist")));
+// }
+
+// app.get("/", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../client/dist/index.html")); // send index.html file if on production
+// });
 
 if (process.env.NODE_ENV === "production") {
   app.use(
@@ -116,6 +127,4 @@ db.once("open", () => {
 // Modified server startup
 await new Promise((resolve) => httpServer.listen({ port: PORT }, resolve));
 
-console.log(
-  `🚀 Server ready at ${location.protocol}//${location.hostname}:${PORT}/graphql`
-);
+console.log(`🚀 Server ready at http://localhost:4000/graphql`);
