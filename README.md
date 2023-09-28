@@ -19,6 +19,7 @@ Be sure to update your deployment url in the cors origin in the server.js file.
 - [Installation](#installation)
 - [Usage](#usage)
 - [License](#license)
+- [Demo](#demo)
 - [Contributing](#contributing)
 - [Tests](#tests)
 - [Questions](#questions)
@@ -36,6 +37,10 @@ Either signup or login to the application. Once logged in, you can create, join,
 ## License
 
 [GPL](https://api.github.com/licenses/gpl-2.0)
+
+## Demo
+
+[https://mernchat-e5d80fcc7baf.herokuapp.com/](https://mernchat-e5d80fcc7baf.herokuapp.com/)
 
 ## Badges
 
